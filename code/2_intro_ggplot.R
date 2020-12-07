@@ -21,13 +21,11 @@ ggplot(CR_dat, aes(x = num_hh)) +
 # change color of bar based on some other characteristic of
 # the data
 ggplot(CR_dat, aes(x = num_hh)) + 
-  geom_bar(aes(fill = factor(poor_stat))) 
+  geom_bar(aes(fill = poor_stat)) 
 
 ggplot(CR_dat, aes(x = age)) + 
-  geom_bar(aes(fill = factor(poor_stat))) 
+  geom_bar(aes(fill = poor_stat)) 
 
-ggplot(CR_dat, aes(y = factor(poor_stat))) + 
-  geom_bar(aes(fill = factor(urban))) 
 
  
 # ------------------------------------------------
@@ -43,9 +41,7 @@ ggplot(CR_dat, aes(x = age, y = mean_educ)) +
 ggplot(CR_dat, aes(x = age, y = mean_educ)) +
   geom_point(alpha = 1/10)
 
-# we can change the color of the points
-ggplot(CR_dat, aes(x = dep_rate, y = mean_educ)) +
-  geom_point(aes(color = mar_stat), alpha = 1/10)
+
 
 
 # ------------------------------------------------
@@ -68,7 +64,6 @@ ggplot(CR_dat, aes(x = age, y = mean_educ)) +
 # ------------------------------------------------
 ggplot(CR_dat, aes(x = age, y = mean_educ)) +
   geom_point(aes(color = mar_stat), alpha = 1/10) + 
-  geom_smooth(method = "lm") +
   facet_wrap(~ mar_stat)
 
 
@@ -77,5 +72,30 @@ ggplot(CR_dat, aes(x = age, y = mean_educ)) +
   geom_smooth(method = "lm") +
   facet_wrap(~ urban)
 
+
+# ------------------------------------------------
+# Exercises
+# ------------------------------------------------
+
+# 1. Use the geom_bar function to create a histogram 
+# plot of poor_stat, where the fill is set to the urban variable
+
+ggplot(CR_dat, aes(y = poor_stat)) + 
+  geom_bar(aes(fill = urban))
+
+# 2. Create a scatter plot of dependency rate on the X axis
+#    and mean_education on the y axis, where the color is set to 
+#    marriage status (mar_stat)
+
+ggplot(CR_dat, aes(x = dep_rate, y = mean_educ)) +
+  geom_point(aes(color = mar_stat), alpha = 1/10)
+
+# 3. Create a scatter plot of age against mean education
+#    faceted by urban. Include a linear smoothing line 
+
+ggplot(CR_dat, aes(x = age, y = mean_educ)) +
+  geom_point(alpha = 1/10) + 
+  geom_smooth(method = "lm") +
+  facet_wrap(~ urban)
 
 

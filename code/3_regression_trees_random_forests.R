@@ -5,18 +5,43 @@
 library(partykit)
 library(tidyverse)
 library(rpart)       
+library('rsample')
 
 set.seed(1818)
 
+#------------------------------------------------------------
+# Load data and create testing and training sets
+#------------------------------------------------------------
+CR_dat <- read_csv("https://raw.githubusercontent.com/jonhersh/ML_Central_Bank_Belize_2/main/datasets/CR_dat.csv")
+
+# initial split is a helper function that will 
+# take a dataset and create functions to split into
+# testing and training sets
+CR_split <- initial_split(CR_dat, p = 0.75)
+
+
+# create training data
+CR_train <- training(CR_split)
+
+# create testing data
+CR_test <- testing(CR_split)
+
+# output nrow of each test and training set
+lst(CR_train,CR_test) %>% purrr::map(nrow) 
+
+
+#------------------------------------------------------------
+# Regression Tree
+#------------------------------------------------------------
 # Use the function ctree in rparty to estimate a 
 # single regression tree classification model 
 poor_tree <- ctree(poor_stat ~ urban + num_children + comp + no_toilet,
                    data = CR_train %>% 
-                       mutate(poor_stat = as.factor(poor_stat)))
+                       mutate(poor_stat = poor_stat))
 
 poor_tree <- ctree(poor_stat ~  urban + num_children + comp + no_toilet,
                    data = CR_train %>% 
-                       mutate(poor_stat = as.factor(poor_stat)))
+                       mutate(poor_stat = poor_stat))
 
 # print the fitted model object 
 print(poor_tree)
@@ -47,7 +72,7 @@ library('rpart')
 poor_rpart <- rpart(poor_stat ~ ., 
                            data =  CR_train %>%  
                         select(-household_ID) %>% 
-                        mutate(poor_stat = as.factor(poor_stat)),
+                        mutate(poor_stat = poor_stat),
                            method = "class",
                            control = list(cp = 0, 
                                           minsplit = 10,
@@ -68,11 +93,9 @@ library('randomForest')
 rf_fit <- 
     randomForest(poor_stat ~ .,
                  data = CR_train %>% 
-                     select(-household_ID) %>% 
-                     mutate(poor_stat = as.factor(poor_stat)),
+                     select(-household_ID),
                  type = classification,
                  mtry = 3,
-                 na.action = na.roughfix,
                  ntree = 100,
                  importance = TRUE
                  )
