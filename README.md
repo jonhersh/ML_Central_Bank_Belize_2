@@ -7,7 +7,7 @@
 Hello! These are the materials for the Dec 7th R and Machine Learning training. The topics covered will include:
 
 1. Intro to R Programming with the [Tidyverse](https://www.tidyverse.org/) 
-1. Data Visualization Using R and [ggplot](https://ggplot2.tidyverse.org/
+1. Data Visualization Using R and [ggplot](https://ggplot2.tidyverse.org/)
 1. Regression trees, bagging, and random forests
 
 ------
