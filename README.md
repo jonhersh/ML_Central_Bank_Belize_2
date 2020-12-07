@@ -41,3 +41,12 @@ If you cannot install those programs, please head over to [rstudio.cloud](rstudi
 ### Using Github
 
 If you have never used Github, don't worry. You can either clone the repository, or you may click the "Code" button on the main page, and then "Download Zip" to download all the files. You may also download the files individually, or copy and paste code as needed. 
+
+### Loading Project in R
+
+`
+install.packages('usethis')
+install.packages('tidyverse')
+
+newProject <- usethis::use_course('https://github.com/jonhersh/ML_Central_Bank_Belize_2/archive/main.zip')
+`
