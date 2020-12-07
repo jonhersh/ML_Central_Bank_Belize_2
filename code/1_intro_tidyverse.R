@@ -3,23 +3,45 @@
 # ------------------------------------------------
 library('tidyverse')
 
-CR_dat <- read.csv("https://raw.githubusercontent.com/jonhersh/ML_Central_Bank_Belize_2/main/datasets/CR_dat.csv")
-
 
 # ------------------------------------------------
-# GLIMPSE to summarize data
+# Load Dataset
 # ------------------------------------------------
 # let's summarize the IDB poverty data using the glimpse function
 # Raw file from 
 # https://www.kaggle.com/c/costa-rican-household-poverty-prediction/data?select=codebook.csv
 
+# load dataset 
+CR_dat <- read_csv("https://raw.githubusercontent.com/jonhersh/ML_Central_Bank_Belize_2/main/datasets/CR_dat.csv")
+
+# data contains household survey data
+# variables include:
+
+# household_ID: unique household identifier
+# poor_stat: = 1 if poor, 0 otherwise
+# num_rooms: number of rooms of main dwelling
+# bathroom: number of bathrooms 
+# refrig: refrigerator present (1) or not (0)
+# no_elect: household has electricity (1) or not (0)
+# comp: household has computer (1) or not (0)
+# dep_rate: dependency rate of household ((children + elderly) / total)
+# tv: television present (1) or not (0)
+# mobile: household has mobile phone (1) or not (0)
+# num_hh: number of people in household
+# mean_educ: average years of education of adults in household
+# num_children: number of children in household
+# num_elderly: number of elderly in household
+# disabled: = 1 if head disable, = 0 otherwise
+# mar_stat: marriage status of head: married, widowed, single, or other
+
+# ------------------------------------------------
+# GLIMPSE to summarize data
+# ------------------------------------------------
+
 
 glimpse(CR_dat)
 
-write.csv(head(glimpse(CR_dat)))
-
-CR_dat %>% glimpse() %>% write.csv()
-
+summary(CR_dat)
 
 
 # ------------------------------------------------

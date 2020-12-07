@@ -3,227 +3,26 @@
 # ------------------------------------------------
 library('tidyverse')
 
-source('code/1_data_prep.r')
+# load data if not already loaded
+
+CR_dat <- read_csv("https://raw.githubusercontent.com/jonhersh/ML_Central_Bank_Belize_2/main/datasets/CR_dat.csv")
 
 
 # ------------------------------------------------
-# GLIMPSE to summarize data
-# ------------------------------------------------
-# let's summarize the IDB poverty data using the glimpse function
-# from https://www.kaggle.com/c/costa-rican-household-poverty-prediction/data?select=codebook.csv
-
-glimpse(CR_dat)
-
-write.csv(head(glimpse(CR_dat)))
-
-CR_dat %>% glimpse() %>% write.csv()
-
-
-
-# ------------------------------------------------
-# Pipe Operator!  
-# ------------------------------------------------
-# The pipe operator "%>%" is super useful!
-# It allows us to execute a series of functions on an object in stages
-# The general recipe is Data_Frame %>% function1() %>% function2() etc
-# Functions are applied right to left
-
-CR_dat %>% glimpse()
-glimpse(CR_dat)
-
-# cmd shift 
-CR_dat %>% glimpse() 
-glimpse(CR_dat)
-
-
-# ------------------------------------------------
-# Slice function: to select ROWS 
-# ------------------------------------------------
-# SLICE: slice to view only the first 10 rows
-CR_dat %>% slice(1:10)
-
-CR_dat %>% slice(101)
-
-# tidy way!
-CR_dat101 <- CR_dat %>% slice(101)
-# base R
-CR_dat101 <- CR_dat[101,]
-
-# SLICE to view only rows 300 to 310 
-CR_dat %>% slice(300:310)
-
-
-
-# ------------------------------------------------
-# Arrange function: to ORDER dataset
+# Create Simple Scatter plot
 # ------------------------------------------------
 
-CR_dat %>% arrange(desc(mean_educ, dep_rate)) %>% head()
+# aes specifies the x and y axes
+# geom_point creates the points
+ggplot(CR_dat, aes(x = num_rooms, y = mean_educ)) +
+  geom_point()
 
-CR_dat %>% arrange(-num_children) %>% head()
+# change the transparency of the points with alpha = [number less than 1]
+ggplot(CR_dat, aes(x = num_rooms, y = mean_educ)) +
+  geom_point(alpha = 1/20)
 
-# arrange the dataframe in descending order by mean_educ
-CR_dat %>% 
-    arrange(desc(mean_educ)) %>% 
-    head()
-
-# arrange the dataframe in ascending order by mean_educ
-CR_dat %>%
-    arrange(mean_educ) %>% 
-    head()
-    
-
-# arrange via multiple columns, by budget and title year, then output rows 1 to 10
-CR_dat %>% 
-    arrange(desc(mean_educ), dep_rate) %>% 
-    slice(1:10)
+# we can change the color of the points
+ggplot(CR_dat, aes(x = num_rooms, y = mean_educ)) +
+  geom_point(aes(color = mar_stat), alpha = 1/20)
 
 
-# ------------------------------------------------
-# SELECT columns of the dataset using the 'select' function
-# ------------------------------------------------
-# select then pass to table function 
-
-CR_dat %>% select(-poor_stat) %>% head()
-
-CR_dat_y <- 
-    CR_dat %>% 
-    select(poor_stat)
-
-CR_dat %>% select(poor_stat) %>% table() 
-
-# select only columns starting with particular characters 
-CR_dat %>% 
-    select(starts_with("num")) %>% 
-    head()
-
-CR_dat %>% 
-    select(ends_with("stat")) %>% 
-    head()
-
-# remove variables using - operator
-CR_dat %>% 
-    select(-num_rooms) %>% 
-    head()
-
-# ------------------------------------------------
-# RENAME variables using the RENAME function
-# ------------------------------------------------
-# note we must pass the DF back to the original data
-CR_temp <- 
-    CR_dat %>% 
-    rename(hh_id = household_ID,
-           tele = tv,
-           var1 = oldvar1) %>% 
-    slice(1:10) %>% 
-    print()
-    
-
-CR_dat <- CR_dat %>% 
-    rename(HH_ID = household_ID) 
-
-CR_dat %>% names()
-
-# change it back!
-CR_dat <- CR_dat %>% 
-    rename(household_ID = HH_ID) 
-
-
-# ------------------------------------------------
-# FILTER and ONLY allow certain rows using the FILTER function
-# ------------------------------------------------
-# only select households with poverty status
-# and see # of rows
-CR_dat %>% 
-    filter(poor_stat == 0) %>% 
-    count()
-
-CR_dat %>% 
-    filter(poor_stat ==  1) %>% 
-    head()
-
-CR_dat %>% 
-    filter(mar_stat == "divorced" & poor_stat == 1) %>% 
-    count()
-
-CR_dat %>% 
-    filter(comp == 1 & num_hh > 3) %>% 
-    count()
-
-
-
-# ------------------------------------------------
-# MUTATE to Transform variables in your dataset
-# ------------------------------------------------
-# adding new variables using mutate()
-
-# feature transformation
-# Max Kuhn featuretransform.
-CR_dat <- CR_dat %>% 
-    mutate(mean_educ_log = log(mean_educ + 1),
-           mean_educ_sq = mean_educ * mean_educ,
-           divorced = if_else(mar_stat == "divorced",1,0))
-
-# inverse hyperbolic sin transformation
-    
-
-CR_dat <- CR_dat %>% 
-    mutate(mean_educ_sq = mean_educ * mean_educ,
-           mean_educ_log = log(mean_educ + 1))
-
-# see average education and educ squared 
-CR_dat %>% select(matches("educ")) %>% colMeans()
-
-# Same thing, but using the package purrr to "map"
-# the function mean to all the columns of the data frame
-# library('purrr')
-CR_dat %>% select(matches("educ")) %>% map_df(mean)
-
-
-# ------------------------------------------------
-# Create summary statistics by GROUP using group_by()
-# ------------------------------------------------
-CR_dat <- CR_dat %>% 
-        # group by urban rural status
-    group_by(urban) 
-
-glimpse(CR_dat)
-
-
-# calculate average and sd of poverty by group 
-CR_urb <- CR_dat %>% 
-    summarize(pov_avg = mean(poor_stat),
-              pov_sd = sd(poor_stat)) %>% 
-    print()
-
-CR_urb <- CR_dat %>% 
-    # calculate average poor status
-    summarize(pov_avg = mean(poor_stat),
-              pov_sd = sd(poor_stat)) %>% 
-    print()
-
-CR_dat %>% 
-    group_by(poor_stat) %>% 
-    select_if(is.numeric) %>%
-    summarize(across(everything(), mean)) %>% 
-    View()
-
-# ------------------------------------------------
-# Exercises
-# ------------------------------------------------
-# 1. Use mutate to create a new variable num_children_sq
-#    which is equal to num_children * num_children.
-
-# 2. Use filter to determine the number of households 
-#    in the dataset that have children 
-
-# 3. Use group_by and summarize to calculate fraction of 
-#    households without electricity in urban vs rural areas
-
-CR_dat %>% 
-    group_by(urban) %>% 
-    summarize(elec = mean(no_elect))
-
-# 4. (Time permitting) Use ggplot2 to explore some interesting
-#    data visualizations with the data. 
-#    Don't feel obligated to do so if you aren't a ggplot2 expert! 
