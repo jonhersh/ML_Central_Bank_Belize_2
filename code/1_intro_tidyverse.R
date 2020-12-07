@@ -1,15 +1,18 @@
 # ------------------------------------------------
-# Load packages and data prep
+# Load packages 
 # ------------------------------------------------
 library('tidyverse')
 
+CR_dat <- read.csv("https://raw.githubusercontent.com/jonhersh/ML_Central_Bank_Belize_2/main/datasets/CR_dat.csv")
 
 
 # ------------------------------------------------
 # GLIMPSE to summarize data
 # ------------------------------------------------
 # let's summarize the IDB poverty data using the glimpse function
-# from https://www.kaggle.com/c/costa-rican-household-poverty-prediction/data?select=codebook.csv
+# Raw file from 
+# https://www.kaggle.com/c/costa-rican-household-poverty-prediction/data?select=codebook.csv
+
 
 glimpse(CR_dat)
 
