@@ -111,7 +111,6 @@ rf_fit <- randomForest(poor_stat ~ .,
                                       as.factor(poor_stat)), 
                        type = classification,
                        mtry = 3,
-                       na.action = na.roughfix,
                        ntree = 100, 
                        importance = TRUE)
 
