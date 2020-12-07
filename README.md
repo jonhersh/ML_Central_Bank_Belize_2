@@ -31,11 +31,11 @@ If you cannot install those programs, please head over to [rstudio.cloud](rstudi
 
 * Click "GET STARTED FOR FREE" 
 * Then click "Sign Up". 
-![](images/rstudio.cloud.png)
+![](images/rstudio.cloud.PNG)
 * You may log in using your email address
 * Next click new project. 
 * You should now see a R Studio session in your browser. 
-![](images/rstudio_console.png)
+![](images/rstudio_console.PNG)
 
 
 ### Using Github
